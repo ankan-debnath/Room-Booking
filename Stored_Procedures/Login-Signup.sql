@@ -9,6 +9,7 @@ BEGIN
     BEGIN
         IF EXISTS( SELECT 1 FROM Users WHERE UserName=@UserName AND Password = @password)
         BEGIN
+            SELECT 'Login Successful' as Message;
             SELECT UserName, Email, Role from Users WHERE
             UserName=@UserName;
         END

@@ -9,12 +9,12 @@ BEGIN
     IF EXISTS (
         SELECT 1 FROM Reservations WHERE
         RoomID = @Room_ID AND
-        Status = 'Confirmed' AND
-        (CheckInDate < @Checkout_DT AND CheckOutDate > @Checkin_DT)
+        (Status = 'Confirmed' OR Status = 'Pending') AND
+        (CheckInDate <= @Checkout_DT AND CheckOutDate >= @Checkin_DT)
     )
         BEGIN
 
-            SELECT 'Unavailable';
+            SELECT 'Unavailable' as Message;
             Declare @Hotel_ID int;
             
             SELECT @Hotel_ID = HotelID from Rooms WHERE
@@ -30,8 +30,8 @@ BEGIN
                         SELECT DISTINCT R.RoomID from Rooms R JOIN Reservations Res
                         ON (Res.RoomID = R.RoomID) WHERE
                         R.HotelID = @Hotel_ID AND 
-                        Status = 'Confirmed' AND
-                        (CheckInDate < @Checkout_DT AND CheckOutDate > @Checkin_DT) 
+                        (Status = 'Confirmed' OR Status = 'Pending') AND
+                        (CheckInDate <= @Checkout_DT AND CheckOutDate >= @Checkin_DT) 
                     )
                     
                 )
@@ -40,7 +40,7 @@ BEGIN
         END
     ELSE
         BEGIN
-            SELECT 'Available';
+            SELECT 'Available' as Message;
         END
     
 END

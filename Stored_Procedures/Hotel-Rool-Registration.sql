@@ -19,7 +19,7 @@ CREATE PROCEDURE RegisterRoom
     @HotelID INT,
     @RoomNumber NVARCHAR(10),
     @RoomType NVARCHAR(50),
-    @PricePerNight DECIMAL(10, 2)
+    @PricePerNight DECIMAL
 AS
 BEGIN
     IF EXISTS (SELECT 1 FROM Rooms WHERE HotelID=@HotelID AND RoomNumber=@RoomNumber)
@@ -36,7 +36,7 @@ BEGIN
         INSERT INTO Rooms (HotelID, RoomNumber, RoomType, PricePerNight)
         VALUES (@HotelID, @RoomNumber, @RoomType, @PricePerNight);
         
-        SELECT 'New Room Registered !';
+        SELECT 'New Room Registered !' as Message;
 
     END
 END;

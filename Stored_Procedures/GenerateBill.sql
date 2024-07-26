@@ -8,14 +8,8 @@ BEGIN
     If EXISTS (SELECT 1 FROM Reservations WHERE ReservationID = @ReservationID )
     BEGIN
        
-        IF EXISTS( SELECT 1 FROM Reservations WHERE ReservationID=@ReservationID AND Status <>'Checkedin' AND Status <> 'Confirmed') 
+        IF EXISTS( SELECT 1 FROM Reservations WHERE ReservationID=@ReservationID AND (Status ='Checkedin' OR Status = 'Confirmed')) 
         BEGIN
-            SELECT 'Sorry! Not confirmed/checkedin!' as Message;
-        END
-
-        ELSE
-        BEGIN
-
             IF EXISTS (SELECT 1 FROM Reservations WHERE @ReservationID 
                 IN (SELECT ReservationID from Billing)
             )
@@ -37,7 +31,11 @@ BEGIN
                 SELECT * from Billing where ReservationID = @ReservationID;
 
             END
+        END
 
+        ELSE
+        BEGIN
+            SELECT 'Sorry! Not confirmed or already checkedin/checkedout !' as Message;
         END
 
     END
